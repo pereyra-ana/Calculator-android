@@ -1,6 +1,5 @@
 package com.ana_pc.calculator;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,9 +29,6 @@ public class NumberOnClickListener implements View.OnClickListener {
         }
         String newValue = this.text.getText().toString() + button.getText();
         this.text.setText(Integer.parseInt(newValue)+"");
-        Log.d("CALCULATOR", "I'm typing a number: " + this.text.getText().toString());
-
-
     }
 
 
