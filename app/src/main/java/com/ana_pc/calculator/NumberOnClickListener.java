@@ -3,7 +3,6 @@ package com.ana_pc.calculator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -14,7 +13,7 @@ public class NumberOnClickListener implements View.OnClickListener {
 
     public Button button;
     public TextView text;
-    public boolean borrarTodoYMostrar = true;
+    public boolean deleteAndShow = true;
 
     public NumberOnClickListener(TextView text) {
         this.text = text;
@@ -24,13 +23,14 @@ public class NumberOnClickListener implements View.OnClickListener {
     public void onClick(View v)
     {
         this.button = (Button)v;
-        if(borrarTodoYMostrar){
+        if (deleteAndShow)
+        {
             this.text.setText("0");
-            borrarTodoYMostrar=false;
+            deleteAndShow = false;
         }
-        String nuevoValor = this.text.getText().toString() + button.getText();
-        this.text.setText(Integer.parseInt(nuevoValor));
-        Log.d("Calculadora", "Estoy aprendo numero: " + this.text.getText().toString());
+        String newValue = this.text.getText().toString() + button.getText();
+        this.text.setText(Integer.parseInt(newValue)+"");
+        Log.d("CALCULATOR", "I'm typing a number: " + this.text.getText().toString());
 
 
     }

@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/infoTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="45sp"
+        android:textSize="60sp"
         android:gravity="right|bottom"
         android:text=""
-        />
-
+        android:inputType="number"/>
 
     <LinearLayout
         android:id="@+id/firstRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-       >
+        android:layout_above="@+id/secondRow">
 
         <Button
             android:id="@+id/buttonSeven"
@@ -66,8 +64,7 @@
         android:id="@+id/secondRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/firstRow"
-        android:gravity="center|bottom">
+        android:layout_above="@+id/thirdRow">
 
         <Button
             android:id="@+id/buttonFour"
@@ -111,7 +108,7 @@
         android:id="@+id/thirdRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/secondRow">
+        android:layout_above="@+id/fourthRow">
 
         <Button
             android:id="@+id/buttonOne"
@@ -154,8 +151,7 @@
         android:id="@+id/fourthRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/thirdRow"
-        android:layout_marginBottom="20dp">
+        android:layout_above="@+id/messages">
 
         <Button
             android:id="@+id/buttonClear"
@@ -192,4 +188,11 @@
             android:text="/"
             android:textSize="30sp" />
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/messages"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"></LinearLayout>
+</RelativeLayout>

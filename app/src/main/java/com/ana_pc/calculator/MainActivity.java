@@ -5,22 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MainActivity extends Activity {
 
     private Integer valueOne = null;
     private String currentOperation;
-    private ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "-", "*", "/"));
     private TextView editText ;
-    private NumberOnClickListener clickNumero;
+    private NumberOnClickListener numberClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,53 +22,59 @@ public class MainActivity extends Activity {
 
         editText = (TextView) this.findViewById(R.id.infoTextView);
 
-        clickNumero = new NumberOnClickListener(editText);
+        numberClick = new NumberOnClickListener(editText);
 
         final Button buttonOne = (Button) this.findViewById(R.id.buttonOne);
-        buttonOne.setOnClickListener(clickNumero);
+        buttonOne.setOnClickListener(numberClick);
 
         final Button buttonTwo = (Button) this.findViewById(R.id.buttonTwo);
-        buttonTwo.setOnClickListener(clickNumero);
-
+        buttonTwo.setOnClickListener(numberClick);
 
         final Button buttonThree = (Button) this.findViewById(R.id.buttonThree);
-        buttonThree.setOnClickListener(clickNumero);
+        buttonThree.setOnClickListener(numberClick);
 
         final Button buttonFour = (Button) this.findViewById(R.id.buttonFour);
-        buttonFour.setOnClickListener(clickNumero);
+        buttonFour.setOnClickListener(numberClick);
 
         final Button buttonFive = (Button) this.findViewById(R.id.buttonFive);
-        buttonFive.setOnClickListener(clickNumero);
+        buttonFive.setOnClickListener(numberClick);
 
         final Button buttonSix = (Button) this.findViewById(R.id.buttonSix);
-        buttonSix.setOnClickListener(clickNumero);
+        buttonSix.setOnClickListener(numberClick);
 
         final Button buttonSeven = (Button) this.findViewById(R.id.buttonSeven);
-        buttonSeven.setOnClickListener(clickNumero);
+        buttonSeven.setOnClickListener(numberClick);
 
         final Button buttonEight = (Button) this.findViewById(R.id.buttonEight);
-        buttonEight.setOnClickListener(clickNumero);
+        buttonEight.setOnClickListener(numberClick);
 
         final Button buttonNine = (Button) this.findViewById(R.id.buttonNine);
-        buttonNine.setOnClickListener(clickNumero);
+        buttonNine.setOnClickListener(numberClick);
 
         final Button buttonZero = (Button) this.findViewById(R.id.buttonZero);
-        buttonZero.setOnClickListener(clickNumero);
+        buttonZero.setOnClickListener(numberClick);
 
-        View.OnClickListener handlerOperadores = new View.OnClickListener(){
+        View.OnClickListener operatorHandler = new View.OnClickListener(){
 
             public void onClick(View v){
-                Button operador = (Button)v;
-                if(valueOne != null){
-                    try {
-                        operarYMostrarResultado();
-                    }catch(Exception e){
-                        return;
+                Button operator = (Button)v;
+                if (valueOne != null)
+                {
+                    try
+                    {
+                        processAndShowResult();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("CALCULATOR", "Error ocurred: " + e.getMessage());
+                        valueOne = null;
+                        currentOperation = "";
+                        editText.setText("");
                     }
                 }
-                currentOperation = operador.getText().toString();
+                currentOperation = operator.getText().toString();
                 valueOne = getCurrentValue();
-                clickNumero.borrarTodoYMostrar = true;
+                numberClick.deleteAndShow = true;
             }
         };
 
@@ -84,21 +83,27 @@ public class MainActivity extends Activity {
         final Button buttonMultiply = (Button) this.findViewById(R.id.buttonMultiply);
         final Button buttonDivide = (Button) this.findViewById(R.id.buttonDivide);
 
-
-        buttonAdd.setOnClickListener(handlerOperadores);
-        buttonSubstract.setOnClickListener(handlerOperadores);
-        buttonMultiply.setOnClickListener(handlerOperadores);
-        buttonDivide.setOnClickListener(handlerOperadores);
+        buttonAdd.setOnClickListener(operatorHandler);
+        buttonSubstract.setOnClickListener(operatorHandler);
+        buttonMultiply.setOnClickListener(operatorHandler);
+        buttonDivide.setOnClickListener(operatorHandler);
 
         final Button buttonEqual = (Button) this.findViewById(R.id.buttonEqual);
         buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    operarYMostrarResultado();
-                    Log.d("Calculadora", "Llame al igual: " + editText.getText());
-                }catch(Exception e){
-
+                try
+                {
+                    processAndShowResult();
+                    valueOne = null;
+                    currentOperation = "";
+                }
+                catch (Exception e)
+                {
+                    Log.e("CALCULATOR", "Error ocurred: " + e.getMessage());
+                    valueOne = null;
+                    currentOperation = "";
+                    editText.setText("");
                 }
             }
         });
@@ -108,45 +113,61 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 editText.setText("0");
-                Log.d("Calculadora", "Aprete Borrar: " + editText.getText());
                 valueOne = null;
-                currentOperation = null;
+                currentOperation = "";
             }
         });
     }
 
-    private int getCurrentValue(){
-        if(this.editText.getText().toString().length() == 0){
+    private int getCurrentValue()
+    {
+        if (this.editText.getText().toString().length() == 0)
+        {
             return 0;
-        }else{
+        }
+        else
+        {
             return Integer.parseInt(this.editText.getText().toString());
         }
     }
 
-    private void operarYMostrarResultado() throws Exception{
-        if(valueOne == null){
+    private void processAndShowResult() throws Exception
+    {
+        if (valueOne == null)
+        {
             return;
         }
-
         int valueTwo = getCurrentValue();
+        int result = 0;
 
-
-        int resultado = 0;
-
-        switch(currentOperation){
-            case "+": resultado = valueOne + valueTwo;break;
-            case "-": resultado = valueOne - valueTwo;break;
-            case "*": resultado = valueOne * valueTwo;break;
-            case "/":
-                if(valueTwo == 0){
-                    Toast.makeText(this, "No se puede dividir por cero", Toast.LENGTH_LONG).show();
-                    throw new Exception("No se puede dividir por cero");
-                }
-                resultado = valueOne / valueTwo;
+        switch(currentOperation)
+        {
+            case "+":
+            {
+                result = valueOne + valueTwo;
                 break;
+            }
+            case "-":
+            {
+                result = valueOne - valueTwo;
+                break;
+            }
+            case "*":
+            {
+                result = valueOne * valueTwo;
+                break;
+            }
+            case "/":
+            {
+                if (valueTwo == 0)
+                {
+                    Toast.makeText(this, "Can't divide by zero", Toast.LENGTH_LONG).show();
+                    throw new Exception("Can't divide by zero");
+                }
+                result = valueOne / valueTwo;
+                break;
+            }
         }
-
-        editText.setText(resultado);
-
+        editText.setText(result+"");
     }
 }
